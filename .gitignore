@@ -2,3 +2,4 @@ writing
 .vscode
 outputTxtFile
 DS_Store
+training_checkpoints
