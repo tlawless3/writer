@@ -10,16 +10,22 @@ targetDir = os.path.abspath(os.path.join(
 print('basedir', baseDir)
 
 
-def traverseFiles(folder):
+def traverseFilesCreateDocument(folder):
     print('running')
-    outputFile = docx.Document()
     for root, subdirs, files in os.walk(folder):
         for curFile in files:
             if curFile.endswith('.docx'):
                 curDoc = docx.Document(root + '/' + curFile)
-                for paragraph in curDoc.paragraphs:
-                    outputFile.add_paragraph(paragraph.text)
-    outputFile.save(targetDir + '/data.txt')
+                if os.path.isfile(targetDir + '/data.docx'):
+                    targetDoc = docx.Document(targetDir + '/data.docx')
+                    for paragraph in curDoc.paragraphs:
+                        targetDoc.add_paragraph(paragraph.text)
+                    targetDoc.save(targetDir + '/data.docx')
+                else:
+                    outputFile = docx.Document()
+                    for paragraph in curDoc.paragraphs:
+                        outputFile.add_paragraph(paragraph.text)
+                    outputFile.save(targetDir + '/data.docx')
 
 
-traverseFiles(baseDir)
+traverseFilesCreateDocument(baseDir)
