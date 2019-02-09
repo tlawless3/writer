@@ -115,53 +115,53 @@ def build_model(vocab_size, embedding_dim, rnn_units, batch_size):
     return model
 
 
-model = build_model(
-    vocab_size=len(vocab),
-    embedding_dim=embedding_dim,
-    rnn_units=rnn_units,
-    batch_size=BATCH_SIZE)
+# model = build_model(
+#     vocab_size=len(vocab),
+#     embedding_dim=embedding_dim,
+#     rnn_units=rnn_units,
+#     batch_size=BATCH_SIZE)
 
-for input_example_batch, target_example_batch in dataset.take(1):
-    example_batch_predictions = model(input_example_batch)
-    print(example_batch_predictions.shape,
-          "# (batch_size, sequence_length, vocab_size)")
+# for input_example_batch, target_example_batch in dataset.take(1):
+#     example_batch_predictions = model(input_example_batch)
+#     print(example_batch_predictions.shape,
+#           "# (batch_size, sequence_length, vocab_size)")
 
-sampled_indices = tf.random.categorical(
-    example_batch_predictions[0], num_samples=1)
-sampled_indices = tf.squeeze(sampled_indices, axis=-1).numpy()
+# sampled_indices = tf.random.categorical(
+#     example_batch_predictions[0], num_samples=1)
+# sampled_indices = tf.squeeze(sampled_indices, axis=-1).numpy()
 
-print("Input: \n", repr("".join(idx2char[input_example_batch[0]])))
-print()
-print("Next Char Predictions: \n", repr("".join(idx2char[sampled_indices])))
-
-
-def loss(labels, logits):
-    return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
+# print("Input: \n", repr("".join(idx2char[input_example_batch[0]])))
+# print()
+# print("Next Char Predictions: \n", repr("".join(idx2char[sampled_indices])))
 
 
-example_batch_loss = loss(target_example_batch, example_batch_predictions)
-print("Prediction shape: ", example_batch_predictions.shape,
-      " # (batch_size, sequence_length, vocab_size)")
-print("scalar_loss:      ", example_batch_loss.numpy().mean())
+# def loss(labels, logits):
+#     return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
 
-model.compile(
-    optimizer=tf.train.AdamOptimizer(),
-    loss=loss)
+
+# example_batch_loss = loss(target_example_batch, example_batch_predictions)
+# print("Prediction shape: ", example_batch_predictions.shape,
+#       " # (batch_size, sequence_length, vocab_size)")
+# print("scalar_loss:      ", example_batch_loss.numpy().mean())
+
+# model.compile(
+#     optimizer=tf.train.AdamOptimizer(),
+#     loss=loss)
 
 # Directory where the checkpoints will be saved
 checkpoint_dir = './training_checkpoints'
 # Name of the checkpoint files
-checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
+# checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
 
-checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-    filepath=checkpoint_prefix,
-    save_weights_only=True)
+# checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+#     filepath=checkpoint_prefix,
+#     save_weights_only=True)
 
-# adjust this for accuracy
-EPOCHS = 3
+# adjust this for more training the higher the more time but the better the model
+# EPOCHS = 30
 
-history = model.fit(dataset.repeat(), epochs=EPOCHS,
-                    steps_per_epoch=steps_per_epoch, callbacks=[checkpoint_callback])
+# history = model.fit(dataset.repeat(), epochs=EPOCHS,
+#                     steps_per_epoch=steps_per_epoch, callbacks=[checkpoint_callback])
 
 # stop uncommenting
 
